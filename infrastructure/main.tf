@@ -1,5 +1,5 @@
 module "provider" {
-  source = "github.com/hobby-kube/provisioning/provider/digitalocean"
+  source = "./provider/digitalocean"
 
   token           = var.digitalocean_token
   ssh_keys        = var.digitalocean_ssh_keys
@@ -11,14 +11,14 @@ module "provider" {
 }
 
 module "swap" {
-  source = "github.com/hobby-kube/provisioning/service/swap"
+  source = "./service/swap"
 
   node_count  = var.node_count
   connections = module.provider.public_ips
 }
 
 module "dns" {
-  source = "github.com/hobby-kube/provisioning/dns/cloudflare"
+  source = "./dns/cloudflare"
 
   node_count = var.node_count
   email      = var.cloudflare_email
@@ -29,7 +29,7 @@ module "dns" {
 }
 
 module "wireguard" {
-  source = "github.com/hobby-kube/provisioning/security/wireguard"
+  source = "./security/wireguard"
 
   node_count   = var.node_count
   connections  = module.provider.public_ips
@@ -39,7 +39,7 @@ module "wireguard" {
 }
 
 module "firewall" {
-  source = "github.com/hobby-kube/provisioning/security/ufw"
+  source = "./security/ufw"
 
   node_count           = var.node_count
   connections          = module.provider.public_ips
@@ -50,7 +50,7 @@ module "firewall" {
 }
 
 module "etcd" {
-  source = "github.com/hobby-kube/provisioning/service/etcd"
+  source = "./service/etcd"
 
   node_count  = var.etcd_node_count
   connections = module.provider.public_ips
@@ -60,7 +60,7 @@ module "etcd" {
 }
 
 module "kubernetes" {
-  source = "github.com/hobby-kube/provisioning/service/kubernetes"
+  source = "./service/kubernetes"
 
   node_count     = var.node_count
   connections    = module.provider.public_ips
