@@ -3,6 +3,7 @@ module "provider" {
 
   token           = var.digitalocean_token
   ssh_keys        = var.digitalocean_ssh_keys
+  ssh_name        = var.digitalocean_ssh_name
   region          = var.digitalocean_region
   size            = var.digitalocean_size
   image           = var.digitalocean_image

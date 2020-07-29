@@ -8,6 +8,10 @@ variable "ssh_keys" {
   type = list
 }
 
+variable "ssh_name" {
+  type = string
+}
+
 variable "hostname_format" {
   type = string
 }
@@ -33,6 +37,10 @@ provider "digitalocean" {
   token = var.token
 }
 
+data "digitalocean_ssh_key" "ssh" {
+  name = var.ssh_name
+}
+
 resource "digitalocean_droplet" "host" {
   name               = format(var.hostname_format, count.index + 1)
   region             = var.region
@@ -40,7 +48,7 @@ resource "digitalocean_droplet" "host" {
   size               = var.size
   backups            = false
   private_networking = true
-  ssh_keys           = var.ssh_keys
+  ssh_keys           = [data.digitalocean_ssh_key.ssh.id]
 
   count = var.hosts
 

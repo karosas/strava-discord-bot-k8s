@@ -26,12 +26,17 @@ variable "digitalocean_ssh_keys" {
   default = [""]
 }
 
+variable "digitalocean_ssh_name" {
+  type    = string
+  default = ""
+}
+
 variable "digitalocean_region" {
   default = "fra1"
 }
 
 variable "digitalocean_size" {
-  default = "1gb"
+  default = "s-1vcpu-1gb"
 }
 
 variable "digitalocean_image" {
