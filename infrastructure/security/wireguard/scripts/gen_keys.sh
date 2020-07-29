@@ -1,10 +1,6 @@
 #!/bin/sh
 set -e
 
-add-apt-repository ppa:wireguard/wireguard
-apt-get update
-apt-get install wireguard
-
 private_key=$(wg genkey)
 public_key=$(echo $private_key | wg pubkey)
 
