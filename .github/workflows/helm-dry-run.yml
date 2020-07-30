@@ -19,6 +19,8 @@ jobs:
       - name: "Dry Run - Nginx Ingress"
         run: |
           ls
-          helm dep build ./helm/nginx-ingress
-          echo helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress ./helm/nginx-ingress
-          helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress ./helm/nginx-ingress
+          echo "${PWD}"
+          helm dep build helm/nginx-ingress
+          CMD_OUTPUT=$(echo helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress helm/nginx-ingress)
+          echo "${CMD_OUTPUT}"
+          helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress helm/nginx-ingress
