@@ -1,0 +1,25 @@
+name: "Helm Dry-Run"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  helm:
+    name: "Dry-Run"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Setup kube config"
+        run: |
+          echo "Setting up kube config"
+          mkdir -p ~/.kube/
+          touch ~/.kube/config
+          echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
+          cat ~/.kube/config
+
+      - name: "Dry Run - Nginx Ingress"
+        run: |
+          helm dep build {path}
+          echo helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress ./helm/nginx-ingress
+          helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress ./helm/nginx-ingress
