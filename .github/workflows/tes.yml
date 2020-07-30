@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: "Setup kube config"
         run: |
+          mkdir -p ~/.kube/
           touch ~/.kube/config
           echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
 
