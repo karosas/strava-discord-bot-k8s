@@ -6,7 +6,7 @@ on:
 
 jobs:
   helm:
-    name: "Dry-Run"
+    name: "Helm Install"
     runs-on: ubuntu-latest
     steps:
       - name: "Setup - Checkout"
@@ -17,7 +17,7 @@ jobs:
           touch ~/.kube/config
           echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
 
-      - name: "Dry Run - Nginx Ingress"
+      - name: "Install - Nginx Ingress"
         run: |
           helm dep build helm/nginx-ingress
-          helm upgrade --install --namespace nginx-ingress nginx-ingress helm/nginx-ingress
+          helm upgrade --install nginx-ingress helm/nginx-ingress

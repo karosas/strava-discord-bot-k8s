@@ -19,4 +19,4 @@ jobs:
       - name: "Dry Run - Nginx Ingress"
         run: |
           helm dep build helm/nginx-ingress
-          helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress helm/nginx-ingress
+          helm upgrade --dry-run --install nginx-ingress helm/nginx-ingress
