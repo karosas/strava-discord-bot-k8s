@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Setup kube config"
-        run: echo "${{ secrets.KUBE_CONFIG }} > ~/.kube/config
+        run: echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
 
       - name: "Test list helm"
         run: kubectl cluster-info
