@@ -4,10 +4,6 @@ variable "hosts" {
   default = 0
 }
 
-variable "ssh_keys" {
-  type = list
-}
-
 variable "ssh_name" {
   type = string
 }

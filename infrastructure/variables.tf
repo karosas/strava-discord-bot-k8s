@@ -21,11 +21,6 @@ variable "digitalocean_token" {
   default = ""
 }
 
-variable "digitalocean_ssh_keys" {
-  type    = list(string)
-  default = [""]
-}
-
 variable "digitalocean_ssh_name" {
   type    = string
   default = ""
