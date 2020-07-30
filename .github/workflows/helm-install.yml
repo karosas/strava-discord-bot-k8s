@@ -25,4 +25,4 @@ jobs:
       - name: "Install - Kubernetes Dashboard"
         run: |
           helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-          helm upgrade --install k8s-dashboard kubernetes-dashboard/kubernetes-dashboard f ./helm/dashboard/values.yaml
+          helm upgrade --install k8s-dashboard kubernetes-dashboard/kubernetes-dashboard -f ./helm/dashboard/values.yaml
