@@ -1,0 +1,17 @@
+name: "Terraform Apply"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  helm:
+    name: "Helm"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Setup kube config"
+        run: echo "${{ secrets.KUBE_CONFIG }} > ~/.kube/config
+
+      - name: "Test list helm"
+        run: kubectl cluster-info
