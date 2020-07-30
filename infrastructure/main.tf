@@ -8,6 +8,7 @@ module "provider" {
   image           = var.digitalocean_image
   hosts           = var.node_count
   hostname_format = var.hostname_format
+  apt_packages    = ["helm"]
 }
 
 module "swap" {
