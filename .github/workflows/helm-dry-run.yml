@@ -10,6 +10,8 @@ jobs:
     name: "Dry-Run"
     runs-on: ubuntu-latest
     steps:
+      - name: "Setup - Checkout"
+        uses: actions/checkout@v2.1.0
       - name: "Setup kube config"
         run: |
           mkdir -p ~/.kube/
@@ -18,9 +20,9 @@ jobs:
 
       - name: "Dry Run - Nginx Ingress"
         run: |
-          SOMETHING=$(ls)
-          echo "${SOMETHING}"
+          echo "Start"
           echo "${PWD}"
+          ls
           helm dep build helm/nginx-ingress
           CMD_OUTPUT=$(echo helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress helm/nginx-ingress)
           echo "${CMD_OUTPUT}"
