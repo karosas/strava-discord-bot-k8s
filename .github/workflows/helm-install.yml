@@ -1,7 +1,8 @@
-name: "Helm Dry-Run"
+name: "Helm Install"
 
 on:
-  pull_request:
+  release:
+    types: [published]
 
 jobs:
   helm:
@@ -19,4 +20,4 @@ jobs:
       - name: "Dry Run - Nginx Ingress"
         run: |
           helm dep build helm/nginx-ingress
-          helm upgrade --dry-run --install --namespace nginx-ingress nginx-ingress helm/nginx-ingress
+          helm upgrade --install --namespace nginx-ingress nginx-ingress helm/nginx-ingress
