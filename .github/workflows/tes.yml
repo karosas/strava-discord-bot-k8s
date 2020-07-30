@@ -15,6 +15,7 @@ jobs:
           mkdir -p ~/.kube/
           touch ~/.kube/config
           echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
+          cat ~/.kube/config
 
       - name: "Test list helm"
         run: kubectl cluster-info
