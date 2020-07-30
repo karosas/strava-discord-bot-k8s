@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: "Setup kube config"
         run: |
-        touch ~/.kube/config
-        echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
+          touch ~/.kube/config
+          echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
 
       - name: "Test list helm"
         run: kubectl cluster-info
