@@ -59,7 +59,7 @@ resource "digitalocean_droplet" "host" {
     inline = [
       "until [ -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
       "apt-get update",
-      "apt-get install -yq ufw ${join(" ", var.apt_packages)}",
+      "apt-get install -yq ufw helm ${join(" ", var.apt_packages)}",
     ]
   }
 }
