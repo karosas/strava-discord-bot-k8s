@@ -142,7 +142,7 @@ metricsScraper:
 ##  - https://hub.helm.sh/charts/stable/metrics-server
 ##  - https://github.com/kubernetes-sigs/metrics-server
 metrics-server:
-  enabled: false
+  enabled: true
   ## Example for additional args
   # args:
   #  - --kubelet-preferred-address-types=InternalIP

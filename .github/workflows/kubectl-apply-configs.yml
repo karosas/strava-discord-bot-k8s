@@ -1,0 +1,27 @@
+name: "Helm Install"
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  helm:
+    name: "Helm Install"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Setup - Checkout"
+        uses: actions/checkout@v2.1.0
+      - name: "Setup kube config"
+        run: |
+          mkdir -p ~/.kube/
+          touch ~/.kube/config
+          echo -e "${{ secrets.KUBE_CONFIG }}" >> ~/.kube/config
+      # For some reason nodes didn't have access to pods by default, so let's makes this monstrosity fix that for us
+      # It was also using 'system:node:{node name}' role instead of 'system:node'
+      # (It creates role for each node)
+      - name: "Node roles"
+        run: |
+          kubectl get nodes -o=json | jq -r '.items | .[] | .metadata | .name' \
+          | while read node ; do cp kubectl/security/templates/node_role_template.yml kubectl/security/templates/$node.yml \
+          && sed -i 's/NODE_NAME/'$node'/g' kubectl/security/templates/$node.yml \
+          && kubectl apply -f kubectl/security/templates/$node.yml ; done

@@ -26,3 +26,20 @@ jobs:
         run: |
           helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
           helm upgrade --install k8s-dashboard kubernetes-dashboard/kubernetes-dashboard -f ./helm/dashboard/values.yaml
+      
+      - name: "Dry Run - Loki + Promtail"
+        run: |
+          helm dep build helm/loki
+          helm dep build helm/promtail
+          helm upgrade --install loki helm/loki
+          helm upgrade --install promtail helm/promtail
+
+      - name: "Dry Run - Prometheus"
+        run: |
+          helm dep build helm/prometheus
+          helm upgrade --install prometheus helm/prometheus
+
+      - name: "Dry Run - Grafana"
+        run: |
+          helm dep build helm/grafana
+          helm upgrade --install grafana helm/grafana
