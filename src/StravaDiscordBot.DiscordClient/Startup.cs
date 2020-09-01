@@ -30,7 +30,7 @@ namespace StravaDiscordBot.DiscordClient
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var client = app.ApplicationServices.GetService<IConsulHttpClient>();
-            client.GetAsync<object>(ServiceNames.StravaApi, new Uri("http://strava/ping"));
+            client.GetAsync<object>(ServiceNames.StravaApi, new Uri("http://localhost/ping"));
         }
     }
 }

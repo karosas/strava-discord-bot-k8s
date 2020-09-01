@@ -12,7 +12,7 @@ namespace StravaDiscordBot.Shared.Extensions
         {
             using var scope = app.ApplicationServices.CreateScope();
 
-            var consulConfig = scope.ServiceProvider.GetService<IOptions<ConsulOptions>>();
+            var consulConfig = scope.ServiceProvider.GetRequiredService<IOptions<ConsulOptions>>();
 
             var serviceId = Guid.NewGuid();
             var consulServiceId = $"{consulConfig.Value.Service}:{serviceId}";

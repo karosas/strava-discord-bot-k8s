@@ -70,7 +70,7 @@ namespace StravaDiscordBot.Shared
 
             var uriBuilder = new UriBuilder(uri)
             {
-                Host = service.Address,
+                Host = new Uri(service.Address).Host,
                 Port = service.Port
             };
 

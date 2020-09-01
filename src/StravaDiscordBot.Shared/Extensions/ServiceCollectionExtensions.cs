@@ -16,7 +16,7 @@ namespace StravaDiscordBot.Shared.Extensions
                 throw new ConsulException("'Consul' configuration section is required");
 
             var consulOptions = new ConsulOptions();
-            config.Bind(consulOptions);
+            config.GetSection("Consul").Bind(consulOptions);
 
             services.Configure<ConsulOptions>(config.GetSection("Consul"));
             services.AddHttpClient<IConsulHttpClient, ConsulHttpClient>();
