@@ -1,8 +1,0 @@
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\obj\Debug\netcoreapp3.1\StravaDiscordBot.Shared.csprojAssemblyReference.cache
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\obj\Debug\netcoreapp3.1\StravaDiscordBot.Shared.AssemblyInfoInputs.cache
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\obj\Debug\netcoreapp3.1\StravaDiscordBot.Shared.AssemblyInfo.cs
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\bin\Debug\netcoreapp3.1\StravaDiscordBot.Shared.deps.json
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\bin\Debug\netcoreapp3.1\StravaDiscordBot.Shared.dll
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\bin\Debug\netcoreapp3.1\StravaDiscordBot.Shared.pdb
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\obj\Debug\netcoreapp3.1\StravaDiscordBot.Shared.dll
-C:\Users\eausv\Desktop\Development\Projects\strava-discord-bot-k8s\src\StravaDiscordBot.Shared\obj\Debug\netcoreapp3.1\StravaDiscordBot.Shared.pdb

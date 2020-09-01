@@ -18,7 +18,7 @@ namespace StravaDiscordBot.Shared
     public class ConsulHttpClient : IConsulHttpClient
     {
         private readonly HttpClient _client;
-        private IConsulClient _consulClient;
+        private readonly IConsulClient _consulClient;
 
         public ConsulHttpClient(HttpClient client, IConsulClient consulClient)
         {
