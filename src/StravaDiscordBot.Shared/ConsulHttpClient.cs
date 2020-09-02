@@ -11,8 +11,8 @@ namespace StravaDiscordBot.Shared
 {
     public interface IConsulHttpClient
     {
-        Task<T> GetAsync<T>(string serviceName, Uri requestUri);
-        Task<T> PostAsync<T>(string serviceName, Uri requestUri, object body = null);
+        Task<T> GetAsync<T>(string serviceName, string relativeUrl);
+        Task<T> PostAsync<T>(string serviceName, string relativeUrl, object body = null);
     }
 
     public class ConsulHttpClient : IConsulHttpClient
@@ -26,35 +26,35 @@ namespace StravaDiscordBot.Shared
             _consulClient = consulClient;
         }
 
-        public async Task<T> GetAsync<T>(string serviceName, Uri requestUri)
+        public async Task<T> GetAsync<T>(string serviceName, string relativeUrl)
         {
-            var uri = await GetRequestUriAsync(serviceName, requestUri);
+            var uri = await GetRequestUriAsync(serviceName, relativeUrl);
 
             var response = await _client.GetAsync(uri);
 
             if (!response.IsSuccessStatusCode)
-                throw new ConsulRequestException($"GET Request to service {serviceName}, url {requestUri} failed.", response.StatusCode);
+                throw new ConsulRequestException($"GET Request to service {serviceName}, relative url {relativeUrl} failed.", response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<T>(content);
         }
 
-        public async Task<T> PostAsync<T>(string serviceName, Uri requestUri, object body = null)
+        public async Task<T> PostAsync<T>(string serviceName, string relativeUrl, object body = null)
         {
-            var uri = await GetRequestUriAsync(serviceName, requestUri);
+            var uri = await GetRequestUriAsync(serviceName, relativeUrl);
 
             var response = await _client.PostAsync(uri, new StringContent(JsonConvert.SerializeObject(body)));
             
             if(!response.IsSuccessStatusCode)
-                throw new ConsulRequestException($"POST Request to service {serviceName}, url {requestUri} failed.", response.StatusCode);
+                throw new ConsulRequestException($"POST Request to service {serviceName}, relative url {relativeUrl} failed.", response.StatusCode);
 
             var content = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<T>(content);
         }
 
-        private async Task<Uri> GetRequestUriAsync(string serviceName, Uri uri)
+        private async Task<Uri> GetRequestUriAsync(string serviceName, string relativeUrl)
         {
             var allRegistration = await _consulClient.Agent.Services();
 
@@ -63,12 +63,12 @@ namespace StravaDiscordBot.Shared
                 .Select(x => x.Value)
                 .ToList();
 
-            var service = GetRandomInstance(matchingRegistrations, serviceName);
+            var service = GetRandomInstance(matchingRegistrations);
 
             if (service == null)
                 throw new ConsulException($"Consul service: '{serviceName}' was not found.");
 
-            var uriBuilder = new UriBuilder(uri)
+            var uriBuilder = new UriBuilder($"http://{service}{relativeUrl}")
             {
                 Host = new Uri(service.Address).Host,
                 Port = service.Port
@@ -78,7 +78,7 @@ namespace StravaDiscordBot.Shared
         }
 
 
-        private AgentService GetRandomInstance(IList<AgentService> services, string serviceName)
+        private static AgentService GetRandomInstance(IList<AgentService> services)
         {
             var random = new Random();
 
