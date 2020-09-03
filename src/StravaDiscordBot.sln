@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.Shared", "StravaDiscordBot.Shared\StravaDiscordBot.Shared.csproj", "{8A9904BC-A78C-472A-8D23-F2B5506B01B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.StravaAPI", "StravaDiscordBot.StravaAPI\StravaDiscordBot.StravaAPI.csproj", "{CC549D79-CB51-41AF-A98F-DE4BCD61325D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.ParticipantApi", "StravaDiscordBot.ParticipantApi\StravaDiscordBot.ParticipantApi.csproj", "{CC549D79-CB51-41AF-A98F-DE4BCD61325D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.DiscordClient", "StravaDiscordBot.DiscordClient\StravaDiscordBot.DiscordClient.csproj", "{11885B69-1385-4BCE-ACBE-DC2360763CD7}"
 EndProject
