@@ -23,7 +23,7 @@ namespace StravaDiscordBot.Shared.Extensions
             {
                 Name = consulConfig.Value.Service,
                 ID = consulServiceId,
-                Address = consulConfig.Value.Address.ToString(),
+                Address = consulConfig.Value.ServiceAddress.ToString(),
                 Port = consulConfig.Value.Port
             };
 

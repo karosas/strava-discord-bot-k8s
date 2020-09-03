@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.Shared", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.ParticipantApi", "StravaDiscordBot.ParticipantApi\StravaDiscordBot.ParticipantApi.csproj", "{CC549D79-CB51-41AF-A98F-DE4BCD61325D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.DiscordClient", "StravaDiscordBot.DiscordClient\StravaDiscordBot.DiscordClient.csproj", "{11885B69-1385-4BCE-ACBE-DC2360763CD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StravaDiscordBot.DiscordApi", "StravaDiscordBot.DiscordApi\StravaDiscordBot.DiscordApi.csproj", "{11885B69-1385-4BCE-ACBE-DC2360763CD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

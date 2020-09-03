@@ -23,7 +23,7 @@ namespace StravaDiscordBot.Shared.Extensions
 
             return services.AddSingleton<IConsulClient>(c => new ConsulClient(consulClientConfig =>
             {
-                consulClientConfig.Address = consulOptions.Address;
+                consulClientConfig.Address = consulOptions.ConsulAddress;
             }));
         }
     }
