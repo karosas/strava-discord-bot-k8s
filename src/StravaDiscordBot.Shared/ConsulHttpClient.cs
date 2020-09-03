@@ -12,6 +12,7 @@ namespace StravaDiscordBot.Shared
     public interface IConsulHttpClient
     {
         Task<T> GetAsync<T>(string serviceName, string relativeUrl);
+        Task<T> DeleteAsync<T>(string serviceName, string relativeUrl);
         Task<T> PostAsync<T>(string serviceName, string relativeUrl, object body = null);
     }
 
@@ -31,6 +32,20 @@ namespace StravaDiscordBot.Shared
             var uri = await GetRequestUriAsync(serviceName, relativeUrl);
 
             var response = await _client.GetAsync(uri);
+
+            if (!response.IsSuccessStatusCode)
+                throw new ConsulRequestException($"GET Request to service {serviceName}, relative url {relativeUrl} failed.", response.StatusCode);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(content);
+        }
+
+        public async Task<T> DeleteAsync<T>(string serviceName, string relativeUrl)
+        {
+            var uri = await GetRequestUriAsync(serviceName, relativeUrl);
+
+            var response = await _client.DeleteAsync(uri);
 
             if (!response.IsSuccessStatusCode)
                 throw new ConsulRequestException($"GET Request to service {serviceName}, relative url {relativeUrl} failed.", response.StatusCode);
