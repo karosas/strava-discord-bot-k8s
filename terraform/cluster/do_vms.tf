@@ -6,7 +6,7 @@ resource "digitalocean_kubernetes_cluster" "cyber" {
   name = "cyber"
   region = var.region
 
-  version = "1.18.6-do.0"
+  version = "1.18.8-do.1"
 
   node_pool {
     name = "worker-pool"
