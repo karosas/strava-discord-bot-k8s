@@ -1,15 +1,15 @@
 variable "email" {
-    type = string
+  type = string
 }
 
 variable "api_token" {
-    type = string
+  type = string
 }
 
 variable "domain" {
-    type = string
+  type = string
 }
 
 variable "cname_value" {
-    type = string
+  type = string
 }

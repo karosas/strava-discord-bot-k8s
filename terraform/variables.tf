@@ -4,11 +4,11 @@ variable "do_token" {
 }
 
 variable "cf_token" {
-    type = "string"
+    type = string
 }
 
 variable "domain" {
-    type = "string"
+    type = string
 }
 
 variable "cf_email" {

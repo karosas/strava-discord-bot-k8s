@@ -9,5 +9,3 @@ variable "region" {
 variable "node_count" {
   type = number
 }
-
-
