@@ -1,11 +1,18 @@
 # DigitalOcean Access Token
-variable "token" {
+variable "do_token" {
     type = string
 }
 
-# SSH keys added to DigitalOcean have names and are easier to retrieve this way
-variable "ssh_name" {
-  type = string
+variable "cf_token" {
+    type = "string"
+}
+
+variable "domain" {
+    type = "string"
+}
+
+variable "cf_email" {
+    type = string
 }
 
 variable "region" {
