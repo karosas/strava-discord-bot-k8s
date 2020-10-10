@@ -15,13 +15,6 @@ resource "digitalocean_kubernetes_cluster" "cyber" {
   }
 
   provisioner "local-exec" {
-    command = <<EOH
-KUBE_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
-URL="https://storage.googleapis.com/kubernetes-release/release/$KUBE_VERSION/bin/linux/amd64/kubectl"
-printf %s "$URL" | xxd
-curl -LO $URL
-chmod 0755 kubectl
-./kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.35.0/deploy/static/provider/do/deploy.yaml
-EOH
+    command = "curl -LO \"https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl\" && chmod 0755 kubectl && ./kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.35.0/deploy/static/provider/do/deploy.yaml"
   }
 }
