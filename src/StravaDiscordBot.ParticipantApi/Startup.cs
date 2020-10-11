@@ -1,4 +1,6 @@
+using System.Text.Json.Serialization;
 using Autofac;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -24,11 +26,16 @@ namespace StravaDiscordBot.ParticipantApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ParticipantApiRootOptions>(Configuration);
-            
+
+            services.AddAutoMapper(typeof(Startup));
             services.AddConsul(Configuration);
             services.AddDbContext<ParticipantContext>(ServiceLifetime.Singleton);
-            
-            services.AddControllers();
+
+            services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddSwaggerGen();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -46,9 +53,12 @@ namespace StravaDiscordBot.ParticipantApi
             }
 
             app.UseConsul();
-            
+
             app.UseRouting();
-            
+
+            app.UseSwagger(c => c.SerializeAsV2 = true);
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "ParticipantAPI v1"); });
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All

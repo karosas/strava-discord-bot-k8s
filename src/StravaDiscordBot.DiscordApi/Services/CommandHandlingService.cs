@@ -27,7 +27,7 @@ namespace StravaDiscordBot.DiscordApi.Services
 
             await _commandService.AddModuleAsync<ParticipantDiscordController>(_serviceProvider);
             await _commandService.AddModuleAsync<MetaDiscordController>(_serviceProvider);
-            await _commandService.AddModuleAsync<AthleteDiscordController>(_serviceProvider);
+            //await _commandService.AddModuleAsync<AthleteDiscordController>(_serviceProvider);
         }
 
         private async Task HandleCommandAsync(SocketMessage rawMessage)

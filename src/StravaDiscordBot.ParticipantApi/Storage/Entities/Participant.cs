@@ -8,9 +8,9 @@ namespace StravaDiscordBot.ParticipantApi.Storage.Entities
         {
         }
 
-        public long Id { get; set; }
+        public ulong Id { get; set; }
         public long StravaId { get; set; }
-        public long LeaderboardId { get; set; }
+        public ulong LeaderboardId { get; set; }
 
     }
 }

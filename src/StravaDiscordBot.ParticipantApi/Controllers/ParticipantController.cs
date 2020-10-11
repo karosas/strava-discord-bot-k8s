@@ -18,19 +18,23 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
         }
 
         [HttpGet("", Name = "GetAll")]
-        public async Task<ActionResult<IList<Participant>>> GetAllForLeaderboard(long leaderboardId)
+        [ProducesResponseType(typeof(IList<Participant>), 200)]
+        public async Task<ActionResult<IList<Participant>>> GetAllForLeaderboard(ulong leaderboardId)
         {
             return Ok(await _participantService.GetAll(leaderboardId)); // TODO ViewModels at some point probably
         }
 
         [HttpGet("{participantId}", Name = "Get")]
-        public async Task<ActionResult<Participant>> Get(long leaderboardId, long participantId)
+        [ProducesResponseType(typeof(Participant), 200)]
+
+        public async Task<ActionResult<Participant>> Get(ulong leaderboardId, ulong participantId)
         {
             return Ok(await _participantService.GetOrDefault(leaderboardId, participantId));
         }
 
         [HttpDelete("{participantId}", Name = "Delete")]
-        public async Task<ActionResult> Delete(long leaderboardId, long participantId)
+        [ProducesResponseType(200)]
+        public async Task<ActionResult> Delete(ulong leaderboardId, ulong participantId)
         {
             var participant = await _participantService.GetOrDefault(leaderboardId, participantId);
             if (participant == null)

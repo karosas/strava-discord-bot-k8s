@@ -5,6 +5,7 @@
     <UserSecretsId>2e937c44-c7cb-4a94-a769-872d72f1ef38</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StravaDiscordBot.ParticipantApi\StravaDiscordBot.ParticipantApi.csproj" />
     <ProjectReference Include="..\StravaDiscordBot.Shared\StravaDiscordBot.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -13,8 +14,8 @@
     <PackageReference Include="Discord.Net" Version="2.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.1" />
   </ItemGroup>
 </Project>

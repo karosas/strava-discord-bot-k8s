@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StravaDiscordBot.Shared.Extensions
+namespace StravaDiscordBot.ParticipantApi.Extensions
 {
     public static class DateTimeExtensions
     {

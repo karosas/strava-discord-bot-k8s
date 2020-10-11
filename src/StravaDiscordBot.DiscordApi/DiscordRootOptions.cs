@@ -2,7 +2,7 @@
 
 namespace StravaDiscordBot.DiscordApi
 {
-    public class DiscordRootOptions : ServiceOptionsBase
+    public class DiscordRootOptions
     {
         public DiscordOptions Discord { get; set; }
     }

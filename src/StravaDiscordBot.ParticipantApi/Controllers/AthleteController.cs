@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StravaDiscordBot.ParticipantApi.Models.Responses;
 using StravaDiscordBot.ParticipantApi.Services;
 using StravaDiscordBot.ParticipantApi.StravaClient.Model;
 
@@ -13,22 +15,25 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
         private readonly IAthleteService _athleteService;
         private readonly IParticipantService _participantService;
         private readonly IStravaCredentialsService _stravaCredentialsService;
-        private ILogger<AthleteController> _logger;
+        private readonly ILogger<AthleteController> _logger;
+        private readonly IMapper _mapper;
 
         public AthleteController(
             IAthleteService athleteService, 
             ILogger<AthleteController> logger,
             IParticipantService participantService, 
-            IStravaCredentialsService stravaCredentialsService)
+            IStravaCredentialsService stravaCredentialsService, IMapper mapper)
         {
             _athleteService = athleteService;
             _logger = logger;
             _participantService = participantService;
             _stravaCredentialsService = stravaCredentialsService;
+            _mapper = mapper;
         }
 
         [HttpGet("", Name = "GetAthlete")]
-        public async Task<ActionResult<DetailedAthlete>> GetAthlete(long leaderboardId, long participantId)
+        [ProducesResponseType(typeof(DetailedAthleteResponse), 200)]
+        public async Task<ActionResult<DetailedAthleteResponse>> GetAthlete(ulong leaderboardId, ulong participantId)
         {
             var participant = await _participantService.GetOrDefault(leaderboardId, participantId);
             if (participant == null)
@@ -38,7 +43,9 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
             if (credentials == null)
                 return NotFound();
 
-            return await _athleteService.Get(credentials);
+            var athlete = await _athleteService.Get(credentials);
+
+            return Ok(_mapper.Map<DetailedAthlete, DetailedAthleteResponse>(athlete));
         }
     }
 }

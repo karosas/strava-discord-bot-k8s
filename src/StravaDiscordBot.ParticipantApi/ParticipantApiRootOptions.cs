@@ -2,8 +2,9 @@
 
 namespace StravaDiscordBot.ParticipantApi
 {
-    public class ParticipantApiRootOptions : ServiceOptionsBase
+    public class ParticipantApiRootOptions
     {
+        public string ConnectionString { get; set; }
         public StravaOptions Strava { get; set; }
     }
 

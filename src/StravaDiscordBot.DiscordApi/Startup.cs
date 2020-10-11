@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Autofac;
 using Discord;
@@ -6,8 +7,10 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -33,6 +36,10 @@ namespace StravaDiscordBot.DiscordApi
             services.AddLogging(builder => builder.AddSerilog(dispose: true));
             services.Configure<DiscordRootOptions>(Configuration);
             services.AddConsul(Configuration);
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddSwaggerGen();;
         }
         public void ConfigureContainer(ContainerBuilder builder)
         {
@@ -41,7 +48,23 @@ namespace StravaDiscordBot.DiscordApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseConsul();
+            app.UseRouting();
+            
+            app.UseSwagger(c => c.SerializeAsV2 = true);
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeaderboardAPI v1"); });
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+            
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             
             StartDiscordBot(app, logger)
                 .ConfigureAwait(false)

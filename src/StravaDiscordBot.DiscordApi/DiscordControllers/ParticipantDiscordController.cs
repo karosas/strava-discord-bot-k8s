@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
-using StravaDiscordBot.DiscordApi.Dto;
 using StravaDiscordBot.DiscordApi.Utilities;
+using StravaDiscordBot.ParticipantApi.Storage.Entities;
 using StravaDiscordBot.Shared;
 
 namespace StravaDiscordBot.DiscordApi.DiscordControllers
@@ -35,7 +35,7 @@ namespace StravaDiscordBot.DiscordApi.DiscordControllers
             using (Context.Channel.EnterTypingState())
             {
                 _logger.LogInformation("Executing list participants command");
-                var participants = await _consulHttpClient.GetAsync<IList<ParticipantDto>>(ServiceNames.StravaApi,
+                var participants = await _consulHttpClient.GetAsync<IList<Participant>>(ServiceNames.ParticipantApi,
                     $"/v1/leaderboard/{Context.Guild.Id}/participant");
 
                 if (!participants.Any())
@@ -64,12 +64,12 @@ namespace StravaDiscordBot.DiscordApi.DiscordControllers
         [Summary("[ADMIN] Remove participant from leaderboard by discord id")]
         [RequireToBeWhitelistedServer]
         [RequireRole(new[] {"Owner", "Bot Manager"})]
-        public async Task RemoveParticipant(long discordId)
+        public async Task RemoveParticipant(ulong discordId)
         {
             using (Context.Channel.EnterTypingState())
             {
                 await _consulHttpClient.DeleteAsync<object>(
-                    ServiceNames.StravaApi,
+                    ServiceNames.ParticipantApi,
                     $"/v1/leaderboard/{Context.Guild.Id}/participant/{discordId}"
                     );
 

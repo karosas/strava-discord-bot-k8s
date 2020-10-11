@@ -17,7 +17,7 @@ namespace StravaDiscordBot.DiscordApi.Modules
             
             builder.RegisterType<ParticipantDiscordController>();
             builder.RegisterType<MetaDiscordController>();
-            builder.RegisterType<AthleteDiscordController>();
+            //builder.RegisterType<AthleteDiscordController>();
         }
     }
 }

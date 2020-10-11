@@ -11,11 +11,11 @@ namespace StravaDiscordBot.ParticipantApi.Services
     // For data isolation, we pretty much always want leaderboardId to be provided to filter out other participants
     public interface IParticipantService
     {
-        Task<Participant> GetOrDefault(long leaderboardId, long id);
-        Task<Participant> GetByStravaOrDefault(long leaderboardId, long stravaId);
+        Task<Participant> GetOrDefault(ulong leaderboardId, ulong id);
+        Task<Participant> GetByStravaOrDefault(ulong leaderboardId, long stravaId);
         Task<Participant> GetByStravaOrDefault(long stravaId);
-        Task<IList<Participant>> GetAll(long leaderboardId);
-        Task<Participant> Create(long id, long stravaId, StravaOauthResponse authResponse, long leaderboardId);
+        Task<IList<Participant>> GetAll(ulong leaderboardId);
+        Task<Participant> Create(ulong id, long stravaId, StravaOauthResponse authResponse, ulong leaderboardId);
         Task Delete(Participant participant);
     }
     public class ParticipantService : IParticipantService
@@ -27,14 +27,14 @@ namespace StravaDiscordBot.ParticipantApi.Services
             _dbContext = dbContext;
         }
 
-        public Task<Participant> GetOrDefault(long leaderboardId, long id)
+        public Task<Participant> GetOrDefault(ulong leaderboardId, ulong id)
         {
             return _dbContext
                 .Participants
                 .FirstOrDefaultAsync(x => x.Id == id && x.LeaderboardId == leaderboardId);
         }
 
-        public Task<Participant> GetByStravaOrDefault(long leaderboardId, long stravaId)
+        public Task<Participant> GetByStravaOrDefault(ulong leaderboardId, long stravaId)
         {
             return _dbContext
                 .Participants
@@ -48,7 +48,7 @@ namespace StravaDiscordBot.ParticipantApi.Services
                 .FirstOrDefaultAsync(x => x.StravaId == stravaId);
         }
 
-        public async Task<IList<Participant>> GetAll(long leaderboardId)
+        public async Task<IList<Participant>> GetAll(ulong leaderboardId)
         {
             var participants = await _dbContext
                 .Participants
@@ -59,7 +59,7 @@ namespace StravaDiscordBot.ParticipantApi.Services
                 .ToList();
         }
 
-        public async Task<Participant> Create(long id, long stravaId, StravaOauthResponse authResponse, long leaderboardId)
+        public async Task<Participant> Create(ulong id, long stravaId, StravaOauthResponse authResponse, ulong leaderboardId)
         {
             var participant = new Participant
             {

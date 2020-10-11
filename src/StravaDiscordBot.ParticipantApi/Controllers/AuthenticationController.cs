@@ -36,6 +36,7 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
         }
 
         [HttpPost("start", Name = "StartAuthentication")]
+        [ProducesResponseType(typeof(StravaOauthResponse), 200)]
         public ActionResult<StravaOauthResponse> StartAuthentication(StartAuthenticationRequest request)
         {
             return Ok(new StartAuthenticationResponse
@@ -45,6 +46,7 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
         }
 
         [HttpPost("finish", Name = "FinishAuthentication")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult> FinishAuthentication(FinishAuthenticationRequest request)
         {
             try

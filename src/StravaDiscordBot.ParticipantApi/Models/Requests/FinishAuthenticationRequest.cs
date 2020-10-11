@@ -3,7 +3,7 @@
     public class FinishAuthenticationRequest
     {
         public string Code { get; set; }
-        public long ParticipantId { get; set; }
-        public long LeaderboardId { get; set; }
+        public ulong ParticipantId { get; set; }
+        public ulong LeaderboardId { get; set; }
     }
 }

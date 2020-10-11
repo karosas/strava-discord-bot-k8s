@@ -7,7 +7,7 @@ namespace StravaDiscordBot.ParticipantApi.Services
 {
     public interface IDiscordService
     {
-        Task NotifyReloginNeeded(long participantId);
+        Task NotifyReloginNeeded(ulong participantId);
     }
 
     // TODO: at some point introduce some messaging broker and replace some/all of these requests with it
@@ -22,7 +22,7 @@ namespace StravaDiscordBot.ParticipantApi.Services
             _consulHttpClient = consulHttpClient;
             _logger = logger;
         }
-        public async Task NotifyReloginNeeded(long participantId)
+        public async Task NotifyReloginNeeded(ulong participantId)
         {
             try
             {
