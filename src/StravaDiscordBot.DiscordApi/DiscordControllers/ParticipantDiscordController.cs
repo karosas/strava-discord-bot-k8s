@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
+using StravaDiscordBot.DiscordApi.Clients.ParticipantApi;
+using StravaDiscordBot.DiscordApi.Clients.ParticipantApi.Models;
 using StravaDiscordBot.DiscordApi.Utilities;
-using StravaDiscordBot.ParticipantApi.Storage.Entities;
-using StravaDiscordBot.Shared;
 
 namespace StravaDiscordBot.DiscordApi.DiscordControllers
 {
@@ -17,13 +17,13 @@ namespace StravaDiscordBot.DiscordApi.DiscordControllers
     public class ParticipantDiscordController : ModuleBase<SocketCommandContext>
     {
         private readonly ILogger<ParticipantDiscordController> _logger;
-        private readonly IConsulHttpClient _consulHttpClient;
+        private readonly IStravaDiscordBotParticipantApi _participantApi;
 
         public ParticipantDiscordController(ILogger<ParticipantDiscordController> logger,
-            IConsulHttpClient consulHttpClient)
+            IStravaDiscordBotParticipantApi participantApi)
         {
             _logger = logger;
-            _consulHttpClient = consulHttpClient;
+            _participantApi = participantApi;
         }
 
         [Command("list")]
@@ -32,7 +32,7 @@ namespace StravaDiscordBot.DiscordApi.DiscordControllers
         [RequireRole(new[] {"Owner", "Bot Manager"})]
         public async Task ListParticipants()
         {
-            using (Context.Channel.EnterTypingState())
+            /*using (Context.Channel.EnterTypingState())
             {
                 _logger.LogInformation("Executing list participants command");
                 var participants = await _consulHttpClient.GetAsync<IList<Participant>>(ServiceNames.ParticipantApi,
@@ -57,7 +57,7 @@ namespace StravaDiscordBot.DiscordApi.DiscordControllers
 
                     await ReplyAsync(embed: embedBuilder.Build());
                 }
-            }
+            }*/
         }
 
         [Command("remove")]
@@ -66,7 +66,7 @@ namespace StravaDiscordBot.DiscordApi.DiscordControllers
         [RequireRole(new[] {"Owner", "Bot Manager"})]
         public async Task RemoveParticipant(ulong discordId)
         {
-            using (Context.Channel.EnterTypingState())
+            /*using (Context.Channel.EnterTypingState())
             {
                 await _consulHttpClient.DeleteAsync<object>(
                     ServiceNames.ParticipantApi,
@@ -74,7 +74,7 @@ namespace StravaDiscordBot.DiscordApi.DiscordControllers
                     );
 
                 await ReplyAsync("👍");
-            }
+            }*/
         }
     }
 }

@@ -19,24 +19,24 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
 
         [HttpGet("", Name = "GetAll")]
         [ProducesResponseType(typeof(IList<Participant>), 200)]
-        public async Task<ActionResult<IList<Participant>>> GetAllForLeaderboard(ulong leaderboardId)
+        public async Task<ActionResult<IList<Participant>>> GetAllForLeaderboard(string leaderboardId)
         {
-            return Ok(await _participantService.GetAll(leaderboardId)); // TODO ViewModels at some point probably
+            return Ok(await _participantService.GetAll(ulong.Parse(leaderboardId))); // TODO ViewModels at some point probably
         }
 
         [HttpGet("{participantId}", Name = "Get")]
         [ProducesResponseType(typeof(Participant), 200)]
 
-        public async Task<ActionResult<Participant>> Get(ulong leaderboardId, ulong participantId)
+        public async Task<ActionResult<Participant>> Get(string leaderboardId, string participantId)
         {
-            return Ok(await _participantService.GetOrDefault(leaderboardId, participantId));
+            return Ok(await _participantService.GetOrDefault(ulong.Parse(leaderboardId), ulong.Parse(participantId)));
         }
 
         [HttpDelete("{participantId}", Name = "Delete")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> Delete(ulong leaderboardId, ulong participantId)
+        public async Task<ActionResult> Delete(string leaderboardId, string participantId)
         {
-            var participant = await _participantService.GetOrDefault(leaderboardId, participantId);
+            var participant = await _participantService.GetOrDefault(ulong.Parse(leaderboardId), ulong.Parse(participantId));
             if (participant == null)
                 return NotFound();
 

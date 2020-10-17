@@ -1,16 +1,18 @@
+using System;
 using System.Text.Json.Serialization;
 using Autofac;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StravaDiscordBot.ParticipantApi.Clients.DiscordApi;
 using StravaDiscordBot.ParticipantApi.Modules;
 using StravaDiscordBot.ParticipantApi.Storage;
-using StravaDiscordBot.Shared.Extensions;
 
 namespace StravaDiscordBot.ParticipantApi
 {
@@ -25,16 +27,22 @@ namespace StravaDiscordBot.ParticipantApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var options = new ParticipantApiRootOptions();
+            Configuration.Bind(options);
+            
             services.Configure<ParticipantApiRootOptions>(Configuration);
-
+            services.AddHealthChecks();
+            
             services.AddAutoMapper(typeof(Startup));
-            services.AddConsul(Configuration);
             services.AddDbContext<ParticipantContext>(ServiceLifetime.Singleton);
+
+            services.AddSingleton<IStravaDiscordBotDiscordApi>(
+                new StravaDiscordBotDiscordApi(new Uri(options.Consul.DiscordBaseUrl)));
 
             services
                 .AddControllers()
-                .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                .AddJsonOptions(jsonOpts =>
+                    jsonOpts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddSwaggerGen();
         }
 
@@ -51,8 +59,6 @@ namespace StravaDiscordBot.ParticipantApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseConsul();
 
             app.UseRouting();
 
@@ -76,7 +82,24 @@ namespace StravaDiscordBot.ParticipantApi
                 dbContext.Database.EnsureCreated();
             }
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/health/startup", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("startup")
+                });
+                
+                endpoints.MapHealthChecks("/health/readiness", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("readiness")
+                });
+                
+                endpoints.MapHealthChecks("/health/liveness", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("liveness")
+                });
+                endpoints.MapControllers();
+            });
         }
     }
 }

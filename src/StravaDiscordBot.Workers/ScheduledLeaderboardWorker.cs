@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NCrontab;
-using StravaDiscordBot.Shared;
+using StravaDiscordBot.Workers.Clients.DiscordApi;
 using StravaDiscordBot.Workers.Clients.DiscordApi.Models;
+using StravaDiscordBot.Workers.Clients.LeaderboardApi;
 using StravaDiscordBot.Workers.Clients.LeaderboardApi.Models;
 using StravaDiscordBot.Workers.Constants;
 using StravaDiscordBot.Workers.Helpers;
@@ -24,13 +25,15 @@ namespace StravaDiscordBot.Workers
         private DateTime _nextRun;
 
         private readonly ILogger<ScheduledLeaderboardWorker> _logger;
-        private readonly IConsulHttpClient _consulHttpClient;
+        private readonly IStravaDiscordBotDiscordApi _discordApi;
+        private readonly IStravaDiscordBotLeaderboardApi _leaderboardApi;
 
         public ScheduledLeaderboardWorker(ILogger<ScheduledLeaderboardWorker> logger,
-            IConsulHttpClient consulHttpClient)
+            IStravaDiscordBotDiscordApi discordApi, IStravaDiscordBotLeaderboardApi leaderboardApi)
         {
             _logger = logger;
-            _consulHttpClient = consulHttpClient;
+            _discordApi = discordApi;
+            _leaderboardApi = leaderboardApi;
             _schedule = CrontabSchedule.Parse(Schedule, new CrontabSchedule.ParseOptions {IncludingSeconds = false});
             _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
         }
@@ -54,20 +57,18 @@ namespace StravaDiscordBot.Workers
 
         private async Task DoWork()
         {
-            var leaderboards =
-                await _consulHttpClient.GetAsync<IList<LeaderboardViewModel>>(ServiceNames.Leaderboard,
-                    "v1/leaderboard");
+            var leaderboards = await _leaderboardApi.GetAllLeaderboardsAsync();
 
             foreach (var leaderboard in leaderboards)
             {
-                await _consulHttpClient.DeleteAsync<object>(ServiceNames.Discord,
-                    $"/v1/server/{leaderboard.Id}/role/{WebUtility.UrlEncode(WinnerRole.Name)}/assignments");
+                await _discordApi.RemoveAllInstancesOfRoleWithHttpMessagesAsync(leaderboard.Id.ToString(),
+                    WinnerRole.Name);
 
                 var startDate = DateTime.Now.AddDays(-7);
 
                 var leaderboardResultViewModel =
-                    await _consulHttpClient.GetAsync<LeaderboardResultViewModel>(ServiceNames.Leaderboard,
-                        $"/v1/leaderboard/{leaderboard.Id}/result?start={startDate}");
+                    await _leaderboardApi.GenerateLeaderboardResultsAsync(leaderboard.Id.ToString(),
+                        start: startDate);
 
                 foreach (var categoryResult in leaderboardResultViewModel.CategoryResults)
                 {
@@ -85,18 +86,18 @@ namespace StravaDiscordBot.Workers
                         place++;
                     });
 
-                    await _consulHttpClient.PostAsync<object>(ServiceNames.Discord,
-                        $"/v1/server/{leaderboard.Id}/channel/{leaderboard.ChannelId}/embed", request);
+                    await _discordApi.SendEmbedMessageToChannelAsync(leaderboard.Id.ToString(),
+                        leaderboard.ChannelId.ToString(), request);
                 }
-                
+
                 var grantRoleRequest = new GrantRoleAssignmentsRequest
                 {
                     Name = WinnerRole.Name,
-                    UserIds = leaderboardResultViewModel.CategoryResults.SelectMany(x => x.OrderedParticipantResults).Select(x => x.Participant.Id).ToList()
+                    UserIds = leaderboardResultViewModel.CategoryResults.SelectMany(x => x.OrderedParticipantResults)
+                        .Select(x => x.Participant.Id).ToList()
                 };
 
-                await _consulHttpClient.PostAsync<object>(ServiceNames.Discord,
-                    $"/v1/server/{leaderboard.Id}/role/assignments", grantRoleRequest);
+                await _discordApi.GrantRoleAssignmentsWithHttpMessagesAsync(leaderboard.Id.ToString(), grantRoleRequest);
             }
         }
     }

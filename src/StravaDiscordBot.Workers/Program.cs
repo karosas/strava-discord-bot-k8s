@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StravaDiscordBot.Shared.Extensions;
+using StravaDiscordBot.Workers.Clients.DiscordApi;
+using StravaDiscordBot.Workers.Clients.LeaderboardApi;
+using StravaDiscordBot.Workers.Clients.ParticipantApi;
 
 namespace StravaDiscordBot.Workers
 {
@@ -18,12 +17,21 @@ namespace StravaDiscordBot.Workers
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    var options = new WorkerRootOptions();
+                    hostContext.Configuration.Bind(options);
+
+                    services.Configure<WorkerRootOptions>(hostContext.Configuration);
+
+                    services.AddSingleton<IStravaDiscordBotParticipantApi>(
+                        new StravaDiscordBotParticipantApi(new Uri(options.Consul.ParticipantBaseUrl)));
+
+                    services.AddSingleton<IStravaDiscordBotDiscordApi>(
+                        new StravaDiscordBotDiscordApi(new Uri(options.Consul.DiscordBaseUrl)));
+
+                    services.AddSingleton<IStravaDiscordBotLeaderboardApi>(
+                        new StravaDiscordBotLeaderboardApi(new Uri(options.Consul.LeaderboardBaseUrl)));
                     services.AddHostedService<ScheduledLeaderboardWorker>();
                 });
     }

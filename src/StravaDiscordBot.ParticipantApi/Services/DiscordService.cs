@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Consul;
 using Microsoft.Extensions.Logging;
-using StravaDiscordBot.Shared;
+using StravaDiscordBot.ParticipantApi.Clients.DiscordApi;
 
 namespace StravaDiscordBot.ParticipantApi.Services
 {
@@ -14,24 +13,17 @@ namespace StravaDiscordBot.ParticipantApi.Services
     // This can possibly introduce circular dependency where services keep calling each other
     public class DiscordService : IDiscordService
     {
-        private readonly IConsulHttpClient _consulHttpClient;
+        private readonly IStravaDiscordBotDiscordApi _discordApi;
         private readonly ILogger<DiscordService> _logger;
 
-        public DiscordService(IConsulHttpClient consulHttpClient, ILogger<DiscordService> logger)
+        public DiscordService(ILogger<DiscordService> logger, IStravaDiscordBotDiscordApi discordApi)
         {
-            _consulHttpClient = consulHttpClient;
             _logger = logger;
+            _discordApi = discordApi;
         }
         public async Task NotifyReloginNeeded(ulong participantId)
         {
-            try
-            {
-                await _consulHttpClient.PostAsync<object>(ServiceNames.DiscordApi, "/notify/relogin");
-            }
-            catch (ConsulRequestException e)
-            {
-                _logger.LogError(e, "Failed to to invoke discord api");
-            }
+            // TODO: Actually implement this_discordApi.SendDMAsync()
         }
     }
 }

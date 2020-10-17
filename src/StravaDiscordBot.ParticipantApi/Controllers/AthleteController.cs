@@ -33,9 +33,9 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
 
         [HttpGet("", Name = "GetAthlete")]
         [ProducesResponseType(typeof(DetailedAthleteResponse), 200)]
-        public async Task<ActionResult<DetailedAthleteResponse>> GetAthlete(ulong leaderboardId, ulong participantId)
+        public async Task<ActionResult<DetailedAthleteResponse>> GetAthlete(string leaderboardId, string participantId)
         {
-            var participant = await _participantService.GetOrDefault(leaderboardId, participantId);
+            var participant = await _participantService.GetOrDefault(ulong.Parse(leaderboardId), ulong.Parse(participantId));
             if (participant == null)
                 return NotFound();
 

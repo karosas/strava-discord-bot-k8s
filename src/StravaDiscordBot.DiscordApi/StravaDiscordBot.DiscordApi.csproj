@@ -5,13 +5,10 @@
     <UserSecretsId>2e937c44-c7cb-4a94-a769-872d72f1ef38</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StravaDiscordBot.ParticipantApi\StravaDiscordBot.ParticipantApi.csproj" />
-    <ProjectReference Include="..\StravaDiscordBot.Shared\StravaDiscordBot.Shared.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Autofac" Version="5.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Discord.Net" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.21" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />

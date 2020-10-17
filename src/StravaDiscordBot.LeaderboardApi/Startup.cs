@@ -1,22 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Autofac;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StravaDiscordBot.LeaderboardApi.Clients.ParticipantApi;
 using StravaDiscordBot.LeaderboardApi.Modules;
 using StravaDiscordBot.LeaderboardApi.Storage;
-using StravaDiscordBot.Shared.Extensions;
 
 namespace StravaDiscordBot.LeaderboardApi
 {
@@ -32,15 +28,21 @@ namespace StravaDiscordBot.LeaderboardApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var options = new LeaderboardApiRootOptions();
+            Configuration.Bind(options);
+            
             services.Configure<LeaderboardApiRootOptions>(Configuration);
-
+            services.AddHealthChecks();
+            
             services.AddAutoMapper(typeof(Startup));
-            services.AddConsul(Configuration);
             services.AddDbContext<LeaderboardContext>(ServiceLifetime.Singleton);
+
+            services.AddSingleton<IStravaDiscordBotParticipantApi>(
+                new StravaDiscordBotParticipantApi(new Uri(options.Consul.ParticipantBaseUrl)));
             
             services.AddControllers()
-                .AddJsonOptions(options =>
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                .AddJsonOptions(jsonOpts =>
+                jsonOpts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddSwaggerGen();;
         }
         
@@ -57,7 +59,6 @@ namespace StravaDiscordBot.LeaderboardApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseConsul();
             app.UseRouting();
 
             app.UseSwagger(c => c.SerializeAsV2 = true);
@@ -80,7 +81,24 @@ namespace StravaDiscordBot.LeaderboardApi
                 dbContext.Database.EnsureCreated();
             }
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/health/startup", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("startup")
+                });
+                
+                endpoints.MapHealthChecks("/health/readiness", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("readiness")
+                });
+                
+                endpoints.MapHealthChecks("/health/liveness", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("liveness")
+                });
+                endpoints.MapControllers();
+            });
         }
     }
 }

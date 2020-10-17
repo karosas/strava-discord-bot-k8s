@@ -6,6 +6,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -14,9 +15,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
+using StravaDiscordBot.DiscordApi.Clients.LeaderboardApi;
+using StravaDiscordBot.DiscordApi.Clients.ParticipantApi;
+using StravaDiscordBot.DiscordApi.Health;
 using StravaDiscordBot.DiscordApi.Modules;
 using StravaDiscordBot.DiscordApi.Services;
-using StravaDiscordBot.Shared.Extensions;
 
 namespace StravaDiscordBot.DiscordApi
 {
@@ -26,21 +29,39 @@ namespace StravaDiscordBot.DiscordApi
         {
             Configuration = configuration;
         }
-        
+
         private IConfiguration Configuration { get; }
         private DiscordSocketClient _discordSocketClient;
         private CommandHandlingService _commandHandlingService;
         private ILogger<Startup> _logger;
+
         public void ConfigureServices(IServiceCollection services)
         {
+            var options = new DiscordRootOptions();
+            Configuration.Bind(options);
+
             services.AddLogging(builder => builder.AddSerilog(dispose: true));
             services.Configure<DiscordRootOptions>(Configuration);
-            services.AddConsul(Configuration);
+            services.AddHealthChecks()
+                .AddCheck("leaderboard-api",
+                    new UrlHealthCheck(new Uri($"{options.Consul.LeaderboardBaseUrl}/health/liveness")),
+                    tags: new[] {"live"})
+                .AddCheck("participant-api",
+                    new UrlHealthCheck(new Uri($"{options.Consul.ParticipantBaseUrl}/health/liveness")),
+                    tags: new[] {"live"});
+
+            services.AddSingleton<IStravaDiscordBotLeaderboardApi>(
+                new StravaDiscordBotLeaderboardApi(new Uri(options.Consul.LeaderboardBaseUrl)));
+            services.AddSingleton<IStravaDiscordBotParticipantApi>(
+                new StravaDiscordBotParticipantApi(new Uri(options.Consul.ParticipantBaseUrl)));
+            
             services.AddControllers()
-                .AddJsonOptions(options =>
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-            services.AddSwaggerGen();;
+                .AddJsonOptions(jsonOpts =>
+                    jsonOpts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddSwaggerGen();
+            
         }
+
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule<DiscordModule>();
@@ -53,9 +74,9 @@ namespace StravaDiscordBot.DiscordApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseConsul();
+            //app.UseConsul();
             app.UseRouting();
-            
+
             app.UseSwagger(c => c.SerializeAsV2 = true);
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeaderboardAPI v1"); });
 
@@ -63,9 +84,27 @@ namespace StravaDiscordBot.DiscordApi
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
-            
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/health/startup", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("startup")
+                });
+                
+                endpoints.MapHealthChecks("/health/readiness", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("readiness")
+                });
+                
+                endpoints.MapHealthChecks("/health/liveness", new HealthCheckOptions
+                {
+                    Predicate = check => check.Tags.Contains("liveness")
+                });
+                
+                endpoints.MapControllers();
+            });
+
             StartDiscordBot(app, logger)
                 .ConfigureAwait(false)
                 .GetAwaiter()
@@ -75,7 +114,7 @@ namespace StravaDiscordBot.DiscordApi
         private async Task StartDiscordBot(IApplicationBuilder app, ILogger<Startup> logger)
         {
             _logger = logger;
-            
+
             var options = app.ApplicationServices.GetRequiredService<IOptionsMonitor<DiscordRootOptions>>();
             _discordSocketClient = app.ApplicationServices.GetRequiredService<DiscordSocketClient>();
             _discordSocketClient.Log += LogAsync;
@@ -85,7 +124,6 @@ namespace StravaDiscordBot.DiscordApi
 
             _commandHandlingService = app.ApplicationServices.GetRequiredService<CommandHandlingService>();
             await _commandHandlingService.InstallCommandsAsync();
-
         }
 
         private Task LogAsync(LogMessage log)
@@ -100,7 +138,8 @@ namespace StravaDiscordBot.DiscordApi
                 LogSeverity.Verbose => LogLevel.Trace,
                 _ => LogLevel.None
             };
-            _logger.Log(logLevel, log.Exception, "[{discord_log_severity}] {discord_log_message}", log.Severity, log.Message);
+            _logger.Log(logLevel, log.Exception, "[{discord_log_severity}] {discord_log_message}", log.Severity,
+                log.Message);
             return Task.CompletedTask;
         }
     }

@@ -19,13 +19,13 @@ namespace StravaDiscordBot.DiscordApi.Controllers
         }
 
         [HttpPost("server/{serverId}/channel/{channelId}/text", Name = "SendTextMessageToChannel")]
-        public async Task<ActionResult> SendTextMessageToChannel(ulong serverId, ulong channelId, SendTextMessageRequest message)
+        public async Task<ActionResult> SendTextMessageToChannel(string serverId, string channelId, SendTextMessageRequest message)
         {
-            var guild = _discordSocketClient.GetGuild(serverId);
+            var guild = _discordSocketClient.GetGuild(ulong.Parse(serverId));
             if (guild == null)
                 return NotFound();
 
-            var channel = guild.GetTextChannel(channelId);
+            var channel = guild.GetTextChannel(ulong.Parse(channelId));
             if (channel == null)
                 return NotFound();
 
@@ -34,13 +34,13 @@ namespace StravaDiscordBot.DiscordApi.Controllers
         }
         
         [HttpPost("server/{serverId}/channel/{channelId}/embed", Name = "SendEmbedMessageToChannel")]
-        public async Task<ActionResult> SendTextMessageToChannel(ulong serverId, ulong channelId, SendEmbedMessageRequest request)
+        public async Task<ActionResult> SendTextMessageToChannel(string serverId, string channelId, SendEmbedMessageRequest request)
         {
-            var guild = _discordSocketClient.GetGuild(serverId);
+            var guild = _discordSocketClient.GetGuild(ulong.Parse(serverId));
             if (guild == null)
                 return NotFound();
 
-            var channel = guild.GetTextChannel(channelId);
+            var channel = guild.GetTextChannel(ulong.Parse(channelId));
             if (channel == null)
                 return NotFound();
 
@@ -55,9 +55,9 @@ namespace StravaDiscordBot.DiscordApi.Controllers
         }
 
         [HttpDelete("server/{serverId}/role/{roleName}/assignments", Name = "RemoveAllInstancesOfRole")]
-        public async Task<ActionResult> RemoveAllRoleAssignments(ulong serverId, string roleName)
+        public async Task<ActionResult> RemoveAllRoleAssignments(string serverId, string roleName)
         {
-            var guild = _discordSocketClient.GetGuild(serverId);
+            var guild = _discordSocketClient.GetGuild(ulong.Parse(serverId));
             if (guild == null)
                 return NotFound();
 
@@ -76,9 +76,9 @@ namespace StravaDiscordBot.DiscordApi.Controllers
         }
 
         [HttpPost("server/{serverId}/role/assignments", Name = "GrantRoleAssignments")]
-        public async Task<ActionResult> GrantRoleAssignments(ulong serverId, GrantRoleAssignmentsRequest request)
+        public async Task<ActionResult> GrantRoleAssignments(string serverId, GrantRoleAssignmentsRequest request)
         {
-            var guild = _discordSocketClient.GetGuild(serverId);
+            var guild = _discordSocketClient.GetGuild(ulong.Parse(serverId));
             if (guild == null)
                 return NotFound();
 
@@ -95,9 +95,9 @@ namespace StravaDiscordBot.DiscordApi.Controllers
         }
         
         [HttpPost("user/text", Name = "SendDM")]
-        public async Task<ActionResult> SendDM(ulong userId, SendTextMessageRequest message)
+        public async Task<ActionResult> SendDM(string userId, SendTextMessageRequest message)
         {
-            var dmChannel = await _discordSocketClient.GetDMChannelAsync(userId);
+            var dmChannel = await _discordSocketClient.GetDMChannelAsync(ulong.Parse(userId));
             if (dmChannel == null)
                 return NotFound();
 

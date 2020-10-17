@@ -8,9 +8,9 @@ namespace StravaDiscordBot.Shared.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static string UseConsul(this IApplicationBuilder app)
+        public static void UseConsul(this IApplicationBuilder app)
         {
-            using var scope = app.ApplicationServices.CreateScope();
+            /*using var scope = app.ApplicationServices.CreateScope();
 
             var consulConfig = scope.ServiceProvider.GetRequiredService<IOptions<ConsulOptions>>();
 
@@ -29,7 +29,7 @@ namespace StravaDiscordBot.Shared.Extensions
 
             client.Agent.ServiceRegister(consulServiceRegistration);
 
-            return consulServiceId;
+            return consulServiceId;*/
         }
     }
 }

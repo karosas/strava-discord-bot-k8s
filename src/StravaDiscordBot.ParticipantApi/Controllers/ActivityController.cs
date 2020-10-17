@@ -31,12 +31,12 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
 
         [HttpGet("", Name = "GetAllActivitiesForPeriod")]
         [ProducesResponseType(typeof(IList<SummaryActivityResponse>), 200)]
-        public async Task<ActionResult<IList<SummaryActivityResponse>>> GetForPeriod(ulong leaderboardId, ulong participantId, [FromQuery] DateTime? from)
+        public async Task<ActionResult<IList<SummaryActivityResponse>>> GetForPeriod(string leaderboardId, string participantId, [FromQuery] DateTime? from)
         {
             if(from == null || from.Value == default)
                 from = DateTime.UtcNow.AddDays(-7);
             
-            var participant = await _participantService.GetOrDefault(leaderboardId, participantId);
+            var participant = await _participantService.GetOrDefault(ulong.Parse(leaderboardId), ulong.Parse(participantId));
             if (participant == null)
                 return NotFound();
 

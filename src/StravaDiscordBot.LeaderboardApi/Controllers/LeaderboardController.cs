@@ -48,20 +48,20 @@ namespace StravaDiscordBot.LeaderboardApi.Controllers
 
         [HttpGet("{leaderboardId}", Name = "GetLeaderboard")]
         [ProducesResponseType(typeof(LeaderboardViewModel), 200)]
-        public async Task<ActionResult<LeaderboardViewModel>> Get(ulong leaderboardId)
+        public async Task<ActionResult<LeaderboardViewModel>> Get(string leaderboardId)
         {
-            var leaderboard = await _leaderboardService.Get(leaderboardId);
+            var leaderboard = await _leaderboardService.Get(ulong.Parse(leaderboardId));
             return Ok(_mapper.Map<Leaderboard, LeaderboardViewModel>(leaderboard));
         }
 
         [HttpGet("{leaderboardId}/result", Name = "GenerateLeaderboardResults")]
         [ProducesResponseType(typeof(LeaderboardResultViewModel), 200)]
-        public async Task<ActionResult<LeaderboardResultViewModel>> GenerateLeaderboardResults(ulong leaderboardId,
+        public async Task<ActionResult<LeaderboardResultViewModel>> GenerateLeaderboardResults(string leaderboardId,
             [FromQuery] DateTime? start)
         {
             start ??= DateTime.Now.AddDays(-7);
 
-            var result = await _leaderboardService.GenerateLeaderboardResult(leaderboardId, start.Value,
+            var result = await _leaderboardService.GenerateLeaderboardResult(ulong.Parse(leaderboardId), start.Value,
                 new RealRideCategory(), new VirtualRideCategory()); // TODO: Categories probably should be specified in the request
 
             return Ok(_mapper.Map<LeaderboardResult, LeaderboardResultViewModel>(result));

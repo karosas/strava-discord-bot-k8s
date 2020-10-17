@@ -1,0 +1,115 @@
+global:
+  consul:
+    discord_api: 
+      name: "strava-discord-bot-discord-service"
+      port: "6001"
+    leaderboard_api: 
+      name: "strava-discord-bot-leaderboard-service"
+      port: "6002"
+    participant_api: 
+      name: "strava-discord-bot-participant-service"
+      port: "6003"
+  env:
+    "ASPNETCORE_ENVIRONMENT": "Development"
+    "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
+    "CONSUL__DISCORDBASEURL": "http://localhost:6001"
+    "CONSUL__LEADERBOARDBASEURL": "http://localhost:6002"
+    "CONSUL__PARTICIPANTBASEURL": "http://localhost:6003"
+
+strava-discord-bot-discord-service:
+  replicaCount: 1
+
+  image:
+    repository: karosas/strava-discord-bot-discord-service
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+
+  autoscaling:
+    enabled: false
+
+  serviceAccount:
+    create: false
+
+  env:
+    "test": "test"
+
+strava-discord-bot-leaderboard-service:
+  replicaCount: 1
+
+  image:
+    repository: karosas/strava-discord-bot-leaderboard-service
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+
+  autoscaling:
+    enabled: false
+
+  serviceAccount:
+    create: false
+
+  env:
+    "test": "test"
+
+
+strava-discord-bot-participant-service:
+  replicaCount: 1
+
+  image:
+    repository: karosas/strava-discord-bot-participant-service
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+
+  autoscaling:
+    enabled: false
+
+  serviceAccount:
+    create: false
+  
+  env:
+    "test": "test"
+
+
+strava-discord-bot-workers-service:
+  replicaCount: 1
+
+  image:
+    repository: karosas/strava-discord-bot-workers-service
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+
+  autoscaling:
+    enabled: false
+
+  serviceAccount:
+    create: false
+
+  env:
+    "test": "testt"

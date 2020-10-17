@@ -21,6 +21,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
 using SwaggerDateConverter = StravaDiscordBot.ParticipantApi.StravaClient.Client.SwaggerDateConverter;
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
+// ReSharper disable CompareOfFloatsByEqualityOperator
 
 namespace StravaDiscordBot.ParticipantApi.StravaClient.Model
 {

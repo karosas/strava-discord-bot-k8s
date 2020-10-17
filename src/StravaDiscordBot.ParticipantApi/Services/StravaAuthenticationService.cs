@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,10 +9,8 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Polly;
 using Polly.Retry;
-using StravaDiscordBot.ParticipantApi.Storage;
 using StravaDiscordBot.ParticipantApi.StravaClient;
 using StravaDiscordBot.ParticipantApi.StravaClient.Client;
-using Policy = Consul.Policy;
 
 namespace StravaDiscordBot.ParticipantApi.Services
 {

@@ -108,3 +108,12 @@ provider "helm" {
     )
   }
 }
+
+resource "helm_release" "consul" {
+  name = "consul-release"
+  repository = "https://helm.releases.hashicorp.com"
+  chart = "consul"
+  version = "0.24.1"
+}
+
+#TODO: Consul
