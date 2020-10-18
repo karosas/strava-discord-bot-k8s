@@ -30,7 +30,7 @@ resource "null_resource" "download_do_specific_ingress_nginx" {
 
 data "local_file" "ingress_nginx_yaml" {
   filename = "${path.cwd}/ingress.yaml"
-  depends_on = ["null_resource.download_do_specific_ingress_nginx"]
+  depends_on = [null_resource.download_do_specific_ingress_nginx ]
 }
 
 resource "kubectl_manifest" "apply_do_specific_ingress_nginx" {
