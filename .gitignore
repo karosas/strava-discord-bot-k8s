@@ -45,3 +45,4 @@ leaderboard.db
 *.db
 *.pubxml
 scripts/upsert_local_helm.sh
+terraform/backend.tf
