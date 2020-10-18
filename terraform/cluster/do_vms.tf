@@ -22,11 +22,13 @@ provider "kubectl" {
   load_config_file       = false
 }
 
-resource "kubectl_manifest" "apply_do_specific_ingress_nginx" {
-  depends_on = [digitalocean_kubernetes_cluster.cyber]
-  yaml_body = file("${path.cwd}/ingress.yaml")
-  
+resource "null_resource" "download_do_specific_ingress_nginx" {
   provisioner "local-exec" {
     command = "curl https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.35.0/deploy/static/provider/do/deploy.yaml --output ${path.cwd}/ingress.yaml"
   }
+}
+
+resource "kubectl_manifest" "apply_do_specific_ingress_nginx" {
+  depends_on = [digitalocean_kubernetes_cluster.cyber, null_resource.download_do_specific_ingress_nginx]
+  yaml_body = file("${path.cwd}/ingress.yaml")
 }
