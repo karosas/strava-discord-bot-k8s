@@ -10,6 +10,13 @@ variable "domain" {
   type = string
 }
 
-variable "cname_value" {
-  type = string
+variable "cnames" {
+  type = map(
+    object({
+      name = string
+      value = string
+      type = string
+      proxied = bool
+    })
+  )
 }

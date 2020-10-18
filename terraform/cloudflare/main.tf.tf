@@ -21,10 +21,12 @@ data "cloudflare_zones" "domain_zones" {
   }
 }
 
-resource "cloudflare_record" "echoserver" {
+resource "cloudflare_record" "cnames" {
+  for_each = var.cnames
+  
   zone_id = local.zone_id
-  name = "echo"
-  value = var.cname_value
-  type = "A"
-  proxied = true
+  name = each.value.name
+  value = each.value.value
+  type = each.value.type
+  proxied = each.value.proxied
 }

@@ -10,7 +10,15 @@ module "cloudflare_dns" {
   source = "./cloudflare"
 
   api_token = var.cf_token
-  cname_value = module.main_cluster.ingress_lb_ip
   domain = var.domain
   email = var.cf_email
+
+  cnames = [
+    {
+      name = "echo"
+      value = module.main_cluster.ingress_lb_ip
+      type = "A"
+      proxied = false
+    }
+  ]
 }
