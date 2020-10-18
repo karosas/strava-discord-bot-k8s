@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -10,10 +9,8 @@ using NCrontab;
 using StravaDiscordBot.Workers.Clients.DiscordApi;
 using StravaDiscordBot.Workers.Clients.DiscordApi.Models;
 using StravaDiscordBot.Workers.Clients.LeaderboardApi;
-using StravaDiscordBot.Workers.Clients.LeaderboardApi.Models;
 using StravaDiscordBot.Workers.Constants;
 using StravaDiscordBot.Workers.Helpers;
-using ServiceNames = StravaDiscordBot.Workers.Constants.ServiceNames;
 
 namespace StravaDiscordBot.Workers
 {
