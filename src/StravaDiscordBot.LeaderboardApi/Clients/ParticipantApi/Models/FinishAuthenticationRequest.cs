@@ -24,7 +24,7 @@ namespace StravaDiscordBot.LeaderboardApi.Clients.ParticipantApi.Models
         /// Initializes a new instance of the FinishAuthenticationRequest
         /// class.
         /// </summary>
-        public FinishAuthenticationRequest(string code = default(string), long? participantId = default(long?), long? leaderboardId = default(long?))
+        public FinishAuthenticationRequest(string code = default(string), string participantId = default(string), string leaderboardId = default(string))
         {
             Code = code;
             ParticipantId = participantId;
@@ -45,12 +45,12 @@ namespace StravaDiscordBot.LeaderboardApi.Clients.ParticipantApi.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "participantId")]
-        public long? ParticipantId { get; set; }
+        public string ParticipantId { get; set; }
 
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "leaderboardId")]
-        public long? LeaderboardId { get; set; }
+        public string LeaderboardId { get; set; }
 
     }
 }

@@ -1,4 +1,7 @@
-﻿$HEADER$namespace $NAMESPACE$
+﻿namespace StravaDiscordBot.WebUI.Constants
 {
-  public class $CLASS$ {$END$}
+    public static class LogConstants
+    {
+        public const string ParticipantId = "{ParticipantId}";
+    }
 }

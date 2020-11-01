@@ -14,3 +14,8 @@ autorest --csharp --input-file=src/StravaDiscordBot.DiscordApi/swagger.json --ou
 autorest --csharp --input-file=src/StravaDiscordBot.DiscordApi/swagger.json --output-folder=src/StravaDiscordBot.Workers/Clients/DiscordApi/ --namespace=StravaDiscordBot.Workers.Clients.DiscordApi
 autorest --csharp --input-file=src/StravaDiscordBot.ParticipantApi/swagger.json --output-folder=src/StravaDiscordBot.Workers/Clients/ParticipantApi/ --namespace=StravaDiscordBot.Workers.Clients.ParticipantApi
 autorest --csharp --input-file=src/StravaDiscordBot.LeaderboardApi/swagger.json --output-folder=src/StravaDiscordBot.Workers/Clients/LeaderboardApi/ --namespace=StravaDiscordBot.Workers.Clients.LeaderboardApi
+
+# Web-UI
+autorest --csharp --input-file=src/StravaDiscordBot.DiscordApi/swagger.json --output-folder=src/StravaDiscordBot.WebUI/Clients/DiscordApi/ --namespace=StravaDiscordBot.WebUI.Clients.DiscordApi
+autorest --csharp --input-file=src/StravaDiscordBot.ParticipantApi/swagger.json --output-folder=src/StravaDiscordBot.WebUI/Clients/ParticipantApi/ --namespace=StravaDiscordBot.WebUI.Clients.ParticipantApi
+autorest --csharp --input-file=src/StravaDiscordBot.LeaderboardApi/swagger.json --output-folder=src/StravaDiscordBot.WebUI/Clients/LeaderboardApi/ --namespace=StravaDiscordBot.WebUI.Clients.LeaderboardApi

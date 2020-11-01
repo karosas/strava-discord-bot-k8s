@@ -62,10 +62,10 @@ namespace StravaDiscordBot.ParticipantApi.Controllers
 
                 credentials.StravaId = athlete.Id.Value;
                 await _stravaCredentialsService.UpsertTokens(credentials.StravaId, exchangeResult);
-                var participant = await _participantService.GetOrDefault(request.LeaderboardId, request.ParticipantId);
+                var participant = await _participantService.GetOrDefault(ulong.Parse(request.LeaderboardId), ulong.Parse(request.ParticipantId));
                 if (participant == null)
-                    await _participantService.Create(request.ParticipantId, credentials.StravaId, exchangeResult,
-                        request.LeaderboardId);
+                    await _participantService.Create(ulong.Parse(request.ParticipantId), credentials.StravaId, exchangeResult,
+                        ulong.Parse(request.LeaderboardId));
 
                 return Ok();
             }

@@ -509,12 +509,10 @@
           "type": "string"
         },
         "participantId": {
-          "format": "int64",
-          "type": "integer"
+          "type": "string"
         },
         "leaderboardId": {
-          "format": "int64",
-          "type": "integer"
+          "type": "string"
         }
       }
     },
