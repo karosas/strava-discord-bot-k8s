@@ -113,3 +113,33 @@ strava-discord-bot-workers-service:
 
   env:
     "test": "testt"
+
+
+strava-discord-bot-webui-service:
+  replicaCount: 1
+
+  image:
+    repository: karosas/strava-discord-bot-webui-service
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: true
+
+  autoscaling:
+    enabled: false
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+    hosts:
+      - host: chart-example.local
+        paths: 
+        - "/strava-discord-bot-webui-service"
+
+  serviceAccount:
+    create: false
+
+  env:
+    "test": "testt"
